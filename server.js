@@ -1,4 +1,10 @@
-// Simple proxy to OpenWeatherMap to keep API key secret.
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    ok: true,
+    service: 'forensic-collection',
+    timestamp: new Date().toISOString()
+  });
+});// Simple proxy to OpenWeatherMap to keep API key secret.
 require('dotenv').config();
 const express = require('express');
 const fetch = require('node-fetch');
