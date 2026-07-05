@@ -39,10 +39,23 @@ app.get('/api/weather', async (req, res) => {
       return res.status(400).json({ message: 'Provide city or lat+lon' });
     }
 
-    const [cw, fc] = await Promise.all([
-      fetch(currentUrl).then((r) => r.json()),
-      fetch(forecastUrl).then((r) => r.json()),
+    const [cwRes, fcRes] = await Promise.all([
+      fetch(currentUrl),
+      fetch(forecastUrl),
     ]);
+
+    const cw = await cwRes.json();
+    const fc = await fcRes.json();
+
+    if (!cwRes.ok || !fcRes.ok) {
+      return res.status(400).json({
+        message: 'Could not fetch weather data',
+        details: {
+          current: cw?.message || null,
+          forecast: fc?.message || null,
+        },
+      });
+    }
 
     res.json({ current: cw, forecast: fc });
   } catch (err) {
